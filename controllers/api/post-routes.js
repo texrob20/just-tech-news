@@ -5,7 +5,11 @@ const sequelize = require('../../config/connection');
 // get all users
 router.get('/', (req, res) => {
     Post.findAll({
-        attributes: [
+      where: {
+        // use the ID from the session
+        user_id: req.session.user_id
+      },
+      attributes: [
             'id',
             'post_url',
             'title',
@@ -128,7 +132,7 @@ router.put('/:id', (req, res) => {
       });
   });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', withAuth, (req, res) => {
     Post.destroy({
       where: {
         id: req.params.id
